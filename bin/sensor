@@ -77,6 +77,8 @@ case $1 in
                 running=$(zpool status tank-pool | grep -c 'in progress')
                 paused=$(zpool status tank-pool | grep -c 'paused')
                 last=$(zpool status tank-pool | grep 'repaired' | awk '{print $13" "$12" "$14}' | cut -d":" -f1-2)
+                last_date=$(zpool status tank-pool | grep 'repaired' | awk '{print $11" "$12" "$13" "$14" "$15}')
+                last_iso=$(date -d "$last_date" +"%Y-%m-%dT%H:%M:%SZ")
                 percentage=$(zpool status tank-pool | grep done | awk '{print $3}' | sed "s/%//g")
                 remaining=$(zpool status tank-pool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
                 speed=$(zpool status tank-pool | grep 'issued at'  | awk '{print $8}' | sed 's/[^.0-9][^.0-9]*//g')
@@ -87,7 +89,7 @@ case $1 in
                 else
                         status="stopped"
                 fi
-                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last"
+                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last_iso"
         ;;
 ## miniserver
         local-pool)
