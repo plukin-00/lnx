@@ -56,7 +56,20 @@ case $1 in
                 zpool list -o name,cap | grep tank-pool | sed 's/[^.0-9][^.0-9]*//g' | sed "s/%//g"
         ;;
         scrub-rpool)
-                zpool status rpool | grep done | awk '{print $3}' | sed "s/%//g"
+                running=$(zpool status rpool | grep -c 'in progress')
+                paused=$(zpool status rpool | grep -c 'paused')
+                last=$(zpool status rpool | grep -c 'paused')
+                percentage=$(zpool status rpool | grep done | awk '{print $3}' | sed "s/%//g")
+                remaining=$(zpool status rpool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
+                speed=$(zpool status rpool | grep 'issued at'  | awk '{print $8}' | sed 's/[^.0-9][^.0-9]*//g')
+                if [ $running -eq 1 ]; then
+                        status="running"
+                elif [ $paused -eq 1 ]; then
+                        status="paused"
+                else
+                        status="stopped"
+                fi
+                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last"
         ;;
         scrub-tank)
                 running=$(zpool status tank-pool | grep -c 'in progress')
@@ -65,14 +78,14 @@ case $1 in
                 percentage=$(zpool status tank-pool | grep done | awk '{print $3}' | sed "s/%//g")
                 remaining=$(zpool status tank-pool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
                 speed=$(zpool status tank-pool | grep 'issued at'  | awk '{print $8}' | sed 's/[^.0-9][^.0-9]*//g')
-                if [[ $running == 1 ]]; then
-                        status == "running"
-                elif [[ $paused == 1 ]]; then
-                        status == "paused"
+                if [ $running -eq 1 ]; then
+                        status="running"
+                elif [ $paused -eq 1 ]; then
+                        status="paused"
                 else
-                        status == "stopped"
+                        status="stopped"
                 fi
-                return "{status: $status,percentage: $percentage,remaining: $remaining,speed: $speed,last: $last}"
+                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last"
         ;;
 ## miniserver
         local-pool)
