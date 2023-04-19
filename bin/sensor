@@ -59,6 +59,8 @@ case $1 in
                 running=$(zpool status rpool | grep -c 'in progress')
                 paused=$(zpool status rpool | grep -c 'paused')
                 last=$(zpool status rpool | grep 'repaired' | awk '{print $13" "$12" "$14}' | cut -d":" -f1-2)
+                last_date=$(zpool status rpool | grep 'repaired' | awk '{print $11" "$12" "$13" "$14" "$15}')
+                last_iso=$(date -d "$last_date" +"%Y-%m-%dT%H:%M:%SZ")
                 percentage=$(zpool status rpool | grep done | awk '{print $3}' | sed "s/%//g")
                 remaining=$(zpool status rpool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
                 speed=$(zpool status rpool | grep 'issued at'  | awk '{print $8}' | sed 's/[^.0-9][^.0-9]*//g')
@@ -69,7 +71,7 @@ case $1 in
                 else
                         status="stopped"
                 fi
-                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last"
+                printf '{"status":"%s","percentage":"%s","remaining":"%s","speed":"%s","last":"%s"}\n' "$status" "$percentage" "$remaining" "$speed" "$last_iso"
         ;;
         scrub-tank)
                 running=$(zpool status tank-pool | grep -c 'in progress')
