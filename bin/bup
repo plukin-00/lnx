@@ -1,0 +1,40 @@
+#!/bin/sh
+
+date=$(date +%Y%m%d-%H%M%S)
+# dirs for backup all
+backup_all="/root /etc /var/lib/lxc"
+
+
+case $1 in
+	config)
+		backup_dir="/mnt/pve/local-backup/misc"
+		archiv_dir="/mnt/pve/tank-pool/misc"
+		mv $backup_dir/miniserver-config_*.tar.bz2 $archiv_dir
+		tar -cjpf $backup_dir/miniserver-config_$date.tar.bz2 $backup_all
+	;;
+	home)
+	## Home Dir
+		backup_dir="/mnt/pve/local-backup"
+		archiv_dir="/mnt/pve/tank-pool/misc"
+		mv $backup_dir/miniserver-root-home_*.tar.bz2 $archiv_dir
+		tar -cjpf $backup_dir/miniserver-root-home_$date.tar.bz2 /root
+	;;
+	# clean)
+		# # files from 1 to 6 days old
+		# find $archiv_dir -maxdepth 1 -type f -mtime +1 -mtime -6 -exec rm {} \;
+	# ;;
+	# clean-old)
+		# # files older than half a year
+		# find $archiv_dir -maxdepth 1 -type f -mtime +178 -exec rm {} \;
+	# ;;
+	proxmox-dumps|pve-dumps)
+	## backup plan für pve:
+		backup_dir="/mnt/pve/local-backup/dump"
+		archiv_dir="/mnt/pve/tank-pool/dump"
+		# tägliche backup routine auf local
+		# wöchentliches copy auf nas + prune auf local
+		cp -ru $backup_dir/* $archiv_dir
+		# wochentliches prune auf nas? -> pvesm prune-backups nas-backup
+		pvesm prune-backups local-backup
+	;;
+esac
