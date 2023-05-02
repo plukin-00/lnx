@@ -34,7 +34,9 @@ case $1 in
 		# tägliche backup routine auf local
 		# wöchentliches copy auf nas + prune auf local
 		cp -ru $backup_dir/* $archiv_dir
-		# wochentliches prune auf nas? -> pvesm prune-backups nas-backup
+		# wochentliches prune auf nas/tank, retention: 7 daily, 4 weekly, 6 monthly, 2 yearly
+                pvesm prune-backups tank-pool
+                # wochentliches prune auf local, retention: 7 daily
 		pvesm prune-backups local-backup
 	;;
 esac
