@@ -1,23 +1,23 @@
 #!/bin/sh
 
 date=$(date +%Y%m%d-%H%M%S)
+host=$(hostname)
 # dirs for backup all
 backup_all="/root /etc /var/lib/lxc"
-
 
 case $1 in
 	config)
 		backup_dir="/mnt/pve/local-backup/misc"
 		archiv_dir="/mnt/pve/tank-pool/misc"
-		mv $backup_dir/miniserver-config_*.tar.bz2 $archiv_dir
-		tar -cjpf $backup_dir/miniserver-config_$date.tar.bz2 $backup_all
+		mv $backup_dir/$host-config_*.tar.bz2 $archiv_dir
+		tar -cjpf $backup_dir/$host-config_$date.tar.bz2 $backup_all
 	;;
 	home)
 	## Home Dir
-		backup_dir="/mnt/pve/local-backup"
+		backup_dir="/mnt/pve/local-backup/misc"
 		archiv_dir="/mnt/pve/tank-pool/misc"
-		mv $backup_dir/miniserver-root-home_*.tar.bz2 $archiv_dir
-		tar -cjpf $backup_dir/miniserver-root-home_$date.tar.bz2 /root
+		mv $backup_dir/$host-root-home_*.tar.bz2 $archiv_dir
+		tar -cjpf $backup_dir/$host-root-home_$date.tar.bz2 /root
 	;;
 	# clean)
 		# # files from 1 to 6 days old
@@ -29,6 +29,7 @@ case $1 in
 	# ;;
 	proxmox-dumps|pve-dumps)
 	## backup plan für pve:
+	## local pve backup: /var/lib/vz/dump/
 		backup_dir="/mnt/pve/local-backup/dump"
 		archiv_dir="/mnt/pve/tank-pool/dump"
 		# tägliche backup routine auf local
