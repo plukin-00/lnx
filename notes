@@ -1,0 +1,6 @@
+
+#prozesse die auf die festplatte zugrefen
+iotop -o -b -d 10
+
+# zeigt schreibzugriffe auf zfs
+watch -d -n 5 zfs list -o name,written
