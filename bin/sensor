@@ -135,8 +135,8 @@ case $1 in
                 lvname=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $1 }')
                 vgname=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $2 }')
                 size=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $4 }')
-                free=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $5 }')
-                printf '{"lvname":"%s","vgname":"%s","size":"%s","free":"%s"}\n' "$lvname" "$vgname" "$size" "$free"
+                used=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $5 }')
+                printf '{"lvname":"%s","vgname":"%s","size":"%s","used":"%s"}\n' "$lvname" "$vgname" "$size" "$used"
         ;;
         local-backup)
                 name=$(df -h | grep "tank-pool" | awk '{ printf $1 }')
