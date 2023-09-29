@@ -59,20 +59,22 @@ case $1 in
                 zpool list -o name,cap | grep tank-pool | sed 's/[^.0-9][^.0-9]*//g' | sed "s/%//g"
         ;;
         rpool)
+                name=$(zpool list -o name,size | grep rpool | awk '{print $1}')
                 size=$(zpool list -o name,size | grep rpool | awk '{print $2}')
                 alloc=$(zpool list -o name,alloc | grep rpool | awk '{print $2}')
                 free=$(zpool list -o name,free | grep rpool | awk '{print $2}')
                 used=$(zpool list -o name,cap | grep rpool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
                 frag=$(zpool list -o name,frag | grep rpool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
-                printf '{"name":"rpool","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$size" "$alloc" "$free" "$used" "$frag"
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$frag"
         ;;
         tank-pool)
+                name=$(zpool list -o name,size | grep tank-pool | awk '{print $1}')
                 size=$(zpool list -o name,size | grep tank-pool | awk '{print $2}')
                 alloc=$(zpool list -o name,alloc | grep tank-pool | awk '{print $2}')
                 free=$(zpool list -o name,free | grep tank-pool | awk '{print $2}')
                 used=$(zpool list -o name,cap | grep tank-pool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
                 frag=$(zpool list -o name,frag | grep tank-pool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
-                printf '{"name":"tank-pool","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$size" "$alloc" "$free" "$used" "$frag"
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$frag"
         ;;
         scrub-rpool)
                 running=$(zpool status rpool | grep -c 'in progress')
@@ -114,15 +116,34 @@ case $1 in
         ;;
 ## miniserver
         local-pool)
-                pvs --units b --no-suffix --noheadings -o pv_name,pv_size,pv_used | awk '{ printf $3 * 100 / $2 }'
+                name=$(pvs --noheadings -o pv_name | awk '{ printf $1 }')
+                size=$(pvs --units G --noheadings -o pv_name,pv_size | awk '{ printf $2 }')
+                alloc=$(pvs --units G --noheadings -o pv_name,pv_used | awk '{ printf $2 }')
+                free=$(pvs --units G --noheadings -o pv_name,pv_free | awk '{ printf $2 }')
+                used=$(pvs --units b --no-suffix --noheadings -o pv_name,pv_size,pv_used | awk '{ printf $3 * 100 / $2 }')
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used"
         ;;
         local-root)
-                lsblk -ao NAME,FSUSE% | grep pve-root | sed 's/[^.0-9][^.0-9]*//g' | sed "s/%//g"
+                name=$(lsblk -ao NAME,NAME | grep pve-root | awk '{ printf $2 }')
+                size=$(lsblk -ao NAME,SIZE | grep pve-root | awk '{ printf $2 }')
+                alloc=$(lsblk -ao NAME,FSUSED | grep pve-root | awk '{ printf $2 }')
+                free=$(lsblk -ao NAME,FSAVAIL | grep pve-root | awk '{ printf $2 }')
+                used=$(lsblk -ao NAME,FSUSE% | grep pve-root | sed "s/%//g" | awk '{ printf $2 }')
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used"
         ;;
         local-lvm)
-                lvdisplay /dev/pve/data | sed -n '/pool data/{s/  */ /gp}' | cut -d' ' -f5 | sed "s/%//g"
+                lvname=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $1 }')
+                vgname=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $2 }')
+                size=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $4 }')
+                free=$(lvdisplay /dev/pve/data --units G -C  | grep data | awk '{ printf $5 }')
+                printf '{"lvname":"%s","vgname":"%s","size":"%s","free":"%s"}\n' "$lvname" "$vgname" "$size" "$free"
         ;;
         local-backup)
-                df | sed -n '/local-backup/{s/  */ /gp}' | cut -d' ' -f5 | sed "s/%//g"
+                name=$(df -h | grep "tank-pool" | awk '{ printf $1 }')
+                size=$(df -h | grep "tank-pool" | awk '{ printf $2 }')
+                alloc=$(df -h | grep "tank-pool" | awk '{ printf $3 }')
+                free=$(df -h | grep "tank-pool" | awk '{ printf $4 }')
+                used=$(df -h | grep "tank-pool" | sed "s/%//g" | awk '{ printf $5 }')
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used"
         ;;
 esac
