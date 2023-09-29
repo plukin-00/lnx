@@ -52,11 +52,27 @@ case $1 in
                 uptime -s
         ;;
 ## terraserver
-        rpool)
+        rpool-old)
                 zpool list -o name,cap | grep rpool | sed 's/[^.0-9][^.0-9]*//g' | sed "s/%//g"
         ;;
-        tank-pool)
+        tank-pool-old)
                 zpool list -o name,cap | grep tank-pool | sed 's/[^.0-9][^.0-9]*//g' | sed "s/%//g"
+        ;;
+        rpool)
+                size=$(zpool list -o name,size | grep rpool | awk '{print $2}')
+                alloc=$(zpool list -o name,alloc | grep rpool | awk '{print $2}')
+                free=$(zpool list -o name,free | grep rpool | awk '{print $2}')
+                used=$(zpool list -o name,cap | grep rpool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
+                frag=$(zpool list -o name,frag | grep rpool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
+                printf '{"name":"rpool","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$size" "$alloc" "$free" "$used" "$frag"
+        ;;
+        tank-pool)
+                size=$(zpool list -o name,size | grep tank-pool | awk '{print $2}')
+                alloc=$(zpool list -o name,alloc | grep tank-pool | awk '{print $2}')
+                free=$(zpool list -o name,free | grep tank-pool | awk '{print $2}')
+                used=$(zpool list -o name,cap | grep tank-pool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
+                frag=$(zpool list -o name,frag | grep tank-pool | awk '{print $2}' | sed 's/[^.0-9][^.0-9]*//g')
+                printf '{"name":"tank-pool","size":"%s","allocated":"%s","free":"%s","used":"%s","fragmentation":"%s"}\n' "$size" "$alloc" "$free" "$used" "$frag"
         ;;
         scrub-rpool)
                 running=$(zpool status rpool | grep -c 'in progress')
