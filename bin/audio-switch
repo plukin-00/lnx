@@ -1,0 +1,14 @@
+#!/bin/sh
+
+currentline=$(pactl list short sinks | grep -n "$(pactl get-default-sink)" | cut -d: -f 1)
+lastline=$(pactl list short sinks | wc -l)
+nextline=$(($currentline % $lastline + 1))
+nextsink=$(pactl list short sinks | head "-n$nextline" | tail -1 | cut -f 1)
+name=$(pactl list sinks | grep "Beschreibung" | head "-n$nextline" | tail -1 | cut -c16-99)
+
+pactl set-default-sink $nextsink
+notify-send -i notification-audio-volume-high "Geänderte Ausgabe" "$name"
+
+for sinkinput in $(pactl list short sink-inputs | cut -f 1); do
+  pactl move-sink-input $sinkinput "@DEFAULT_SINK@"
+done
