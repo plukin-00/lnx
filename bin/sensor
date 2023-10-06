@@ -149,4 +149,23 @@ case $1 in
                 used=$(df -h | grep "tank-pool" | sed "s/%//g" | awk '{ printf $5 }')
                 printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used"
         ;;
+## sticktop
+        root)
+                name=$(df -h | grep "mmcblk0p2" | awk '{ printf $1 }')
+                size=$(df -h | grep "mmcblk0p2" | awk '{ printf $2 }')
+                alloc=$(df -h | grep "mmcblk0p2" | awk '{ printf $3 }')
+                free=$(df -h | grep "mmcblk0p2" | awk '{ printf $4 }')
+                used=$(df -h | grep "mmcblk0p2" | sed "s/%//g" | awk '{ printf $5 }')
+                mount=$(df -h | grep "mmcblk0p2" | awk '{ printf $6 }')
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","mount":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$mount"
+        ;;
+        home)
+                name=$(df -h | grep "mmcblk0p4" | awk '{ printf $1 }')
+                size=$(df -h | grep "mmcblk0p4" | awk '{ printf $2 }')
+                alloc=$(df -h | grep "mmcblk0p4" | awk '{ printf $3 }')
+                free=$(df -h | grep "mmcblk0p4" | awk '{ printf $4 }')
+                used=$(df -h | grep "mmcblk0p4" | sed "s/%//g" | awk '{ printf $5 }')
+                mount=$(df -h | grep "mmcblk0p4" | awk '{ printf $6 }')
+                printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","mount":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$mount"
+        ;;
 esac
