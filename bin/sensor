@@ -86,7 +86,7 @@ case $1 in
                 last_date=$(zpool status rpool | grep 'repaired' | awk -F 'on' '{print $2}')
                 last_iso=$(date -d "$last_date" +"%Y-%m-%dT%H:%M:%SZ")
                 percentage=$(zpool status rpool | grep done | awk '{print $3}' | sed "s/%//g")
-                remaining=$(zpool status rpool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
+                remaining=$(zpool status rpool | grep 'to go' | cut -d"," -f3 | cut -d":" -f1-2)
                 speed=$(zpool status rpool | grep 'issued at'  | awk '{print $NF}' | sed 's/[^.0-9][^.0-9]*//g')
                 last_duration=$(zpool status rpool | grep 'repaired' | awk -F 'in ' '{print $2}' | awk -F ' with' '{print $1}' | cut -d":" -f1-2)
                 if [ $running -eq 1 ]; then
@@ -105,7 +105,7 @@ case $1 in
                 last_date=$(zpool status tank-pool | grep 'repaired' | awk -F 'on' '{print $2}')
                 last_iso=$(date -d "$last_date" +"%Y-%m-%dT%H:%M:%SZ")
                 percentage=$(zpool status tank-pool | grep done | awk '{print $3}' | sed "s/%//g")
-                remaining=$(zpool status tank-pool | grep 'to go'  | awk '{print $5}'  | cut -d":" -f1-2)
+                remaining=$(zpool status tank-pool | grep 'to go' | cut -d"," -f3 | cut -d":" -f1-2)
                 speed=$(zpool status tank-pool | grep 'issued at'  | awk '{print $NF}' | sed 's/[^.0-9][^.0-9]*//g')
                 last_duration=$(zpool status tank-pool | grep 'repaired' | awk -F 'in ' '{print $2}' | awk -F ' with' '{print $1}' | cut -d":" -f1-2)
                 if [ $running -eq 1 ]; then
