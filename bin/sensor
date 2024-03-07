@@ -168,4 +168,10 @@ case $1 in
                 mount=$(df -h | grep "mmcblk0p4" | awk '{ printf $6 }')
                 printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","mount":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$mount"
         ;;
+## pihole
+        updates|u)
+                number=$(sudo apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1)
+                packages=$(sudo apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1)
+                printf '{"number":"%s","packages":"%s"}\n' "$number" "$packages" 
+        ;;
 esac
