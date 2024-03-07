@@ -26,10 +26,9 @@ case $1 in
                 sensors | grep 'fan3:' | sed 's/[^.0-9][^.0-9]*/:/g'  | cut -d":" -f3
         ;;
         updates|u)
-                apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1
-        ;;
-        list-updates|lu)
-                apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1
+                number=$(sudo apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1)
+                packages=$(sudo apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1)
+                printf '{"number":"%s","packages":"%s"}\n' "$number" "$packages" 
         ;;
         load|l)
                 awk '{u=$2+$4; t=$2+$4+$5; if (NR==1){u1=u; t1=t;} else print ($2+$4-u1) * 100 / (t-t1); }' <(grep 'cpu ' /proc/stat) <(sleep 1;grep 'cpu ' /proc/stat)
@@ -167,11 +166,5 @@ case $1 in
                 used=$(df -h | grep "mmcblk0p4" | sed "s/%//g" | awk '{ printf $5 }')
                 mount=$(df -h | grep "mmcblk0p4" | awk '{ printf $6 }')
                 printf '{"name":"%s","size":"%s","allocated":"%s","free":"%s","used":"%s","mount":"%s"}\n' "$name" "$size" "$alloc" "$free" "$used" "$mount"
-        ;;
-## pihole
-        updates|u)
-                number=$(sudo apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1)
-                packages=$(sudo apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1)
-                printf '{"number":"%s","packages":"%s"}\n' "$number" "$packages" 
         ;;
 esac
