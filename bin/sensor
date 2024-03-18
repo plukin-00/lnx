@@ -27,7 +27,7 @@ case $1 in
         ;;
         updates|u)
                 number=$(sudo apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1)
-                packages=$(sudo apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1)
+                packages=$(sudo apt list --upgradeable 2>/dev/null | /usr/bin/grep / | cut -d"/" -f1 | sed ':a;N;$!ba;s/\n/ /g')
                 printf '{"number":"%s","packages":"%s"}\n' "$number" "$packages" 
         ;;
         load|l)
