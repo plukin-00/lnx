@@ -1,0 +1,14 @@
+#!/bin/bash
+
+case $1 in
+	bin)
+		# Binary
+		cd ~/vaultwarden/output
+		./vaultwarden --version | cut -d" " -f2
+	;;
+	web)
+		## Web Interface
+		cd ~/vaultwarden/output/web-vault
+		cat version.json | cut -d"\"" -f4
+	;;
+esac
