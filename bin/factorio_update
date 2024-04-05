@@ -1,0 +1,26 @@
+#!/bin/bash
+
+cd /home/factorio/
+# backup
+mkdir server_backup-pre_$1
+cp server/* server_backup-pre_$1/. -r
+sleep 2
+rm -r server/bin
+rm -r server/data
+sleep 2
+
+# download
+wget https://www.factorio.com/get-download/$1/headless/linux64 -O factorio_$1.tar.xz
+sleep 1
+tar -xJf factorio_$1.tar.xz
+sleep 2
+
+# copy
+cp factorio/bin server/. -r
+cp factorio/data server/. -r
+chown -R factorio:factorio server
+sleep 2
+
+# clean
+rm -r factorio/bin
+rm -r factorio/data
