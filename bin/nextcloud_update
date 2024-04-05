@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd /var/www/virtual/plukin/html/cloud/
+php occ maintenance:mode --on
+sleep 2
+cd /var/www/virtual/plukin/html/cloud/updater/
+php updater.phar -nq
+sleep 2
+cd /var/www/virtual/plukin/html/cloud/
+php occ maintenance:mode --off
+sleep 2
+php occ db:add-missing-indices
