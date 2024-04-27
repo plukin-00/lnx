@@ -1,13 +1,13 @@
 #!/bin/bash
 
-version=$1
+#version=$1
 date=$(date +%Y%m%d-%H%M%S)
 
 # backup
 cd /home/plukin/backup
-mkdir snappymail-$date-pre_$version
-cd snappymail-$date-pre_$version
-cp -r /var/www/virtual/plukin/html/mail/* ./
+mkdir snappymail-$date-pre
+cd snappymail-$date-pre
+mv /var/www/virtual/plukin/html/mail/* ./
 
 # download
 cd /home/plukin/tmp/mail
@@ -15,18 +15,15 @@ cd /home/plukin/tmp/mail
 #tar -xvf snappymail-*.tar.gz
 wget https://snappymail.eu/repository/latest.tar.gz
 tar -xzf latest.tar.gz
+rm latest.tar.gz
 
 # install
-mv snappymail /var/www/virtual/plukin/html/mail/
-mv index.php /var/www/virtual/plukin/html/mail/
-mv README.md /var/www/virtual/plukin/html/mail/
-mv _include.php /var/www/virtual/plukin/html/mail/
+mv * /var/www/virtual/plukin/html/mail/
 #mv .htaccess /var/www/virtual/plukin/html/mail/
-mv data/VERSION /var/www/virtual/plukin/html/mail/data/
-mv data/README.md /var/www/virtual/plukin/html/mail/data/
-#mv data/.htaccess /var/www/virtual/plukin/html/mail/
+
+# restore data
+cp -r /home/plukin/backup/snappymail-$date-pre/data/_data_ /var/www/virtual/plukin/html/mail/data
 
 # cleanup
-rm -r data
-rm .htaccess
-rm snappymail-*.tar.gz
+#cd /home/plukin/tmp/mail/
+#rm -r *
