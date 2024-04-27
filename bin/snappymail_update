@@ -11,8 +11,6 @@ mv /var/www/virtual/plukin/html/mail/* ./
 
 # download
 cd /home/plukin/tmp/mail
-#wget https://github.com/the-djmaze/snappymail/releases/download/v2.36.1/snappymail-2.36.1.tar.gz
-#tar -xvf snappymail-*.tar.gz
 wget https://snappymail.eu/repository/latest.tar.gz
 tar -xzf latest.tar.gz
 rm latest.tar.gz
