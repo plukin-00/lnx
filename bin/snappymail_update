@@ -1,8 +1,27 @@
 #!/bin/bash
 
-cd /var/www/virtual/plukin/html/
-mv mail /home/plukin/backup/snappymail
-sleep 2
+version=$1
+date=$(date +%Y%m%d-%H%M%S)
+
+# backup
+cd /home/plukin/backup
+mkdir snappymail-$date-pre_$version
+cd snappymail-$date-pre_$version
+cp -r /var/www/virtual/plukin/html/mail/* ./
+
+# download
+cd /home/plukin/tmp/mail
 wget https://github.com/the-djmaze/snappymail/releases/download/v2.36.1/snappymail-2.36.1.tar.gz
 tar -xvf snappymail-*.tar.gz
+
+# install
+mv snappymail /var/www/virtual/plukin/html/mail/
+mv index.php /var/www/virtual/plukin/html/mail/
+mv README.md /var/www/virtual/plukin/html/mail/
+mv _include.php /var/www/virtual/plukin/html/mail/
+#mv .htaccess /var/www/virtual/plukin/html/mail/
+
+# cleanup
+rm -r data
+rm .htaccess
 rm snappymail-*.tar.gz
