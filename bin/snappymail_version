@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /var/www/virtual/plukin/html/mail/data/
+cat INSTALLED
