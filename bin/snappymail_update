@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd /var/www/virtual/plukin/html/
+mv mail /home/plukin/backup/snappymail
+sleep 2
+wget https://github.com/the-djmaze/snappymail/releases/download/v2.36.1/snappymail-2.36.1.tar.gz
+tar -xvf snappymail-*.tar.gz
+rm snappymail-*.tar.gz
