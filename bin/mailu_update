@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd /mailu
+docker compose pull
+sleep 1
+docker compose up -d
+sleep 1
+exit
