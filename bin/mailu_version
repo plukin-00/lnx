@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker exec mailu-admin-1 cat /version
+exit
