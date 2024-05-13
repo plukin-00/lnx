@@ -1,0 +1,12 @@
+#!/bin/sh
+
+case $1 in
+        size)
+                cd /mailu/mail/archiv@local.plumeyer.net
+                du -sh | awk '{print $1}'
+        ;;
+        number)
+                cd /mailu/mail/archiv@local.plumeyer.net
+                find . -type f | wc -l
+        ;;
+esac
