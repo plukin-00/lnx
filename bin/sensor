@@ -10,16 +10,16 @@ case $1 in
                         while IFS= read -r line; do
                                 case $item in
                                         command)
-                                        printf '"%s"' $(echo $line | cut -d'?' -f1)
+                                        printf '"%s"' "$(echo $line | cut -d'?' -f1)"
                                         ;;
                                         cpu)
-                                        printf '"%s"' $(echo $line | cut -d'?' -f2 | cut -d' ' -f2)
+                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f2)"
                                         ;;
                                         memory)
-                                        printf '"%s"' $(echo $line | cut -d'?' -f2 | cut -d' ' -f3)
+                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f3)"
                                         ;;
                                         state)
-                                        printf '"%s"' $(echo $line | cut -d'?' -f2 | cut -d' ' -f4)
+                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f4)"
                                         ;;
                                 esac
                                 if [ $count != 4 ]; then
