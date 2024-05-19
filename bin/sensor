@@ -2,8 +2,7 @@
 
 case $1 in
         top)
-                list=$(ps --no-headers -eo comm,%cpu,%mem --sort=-%mem | head -5)
-                list2=$(ps --no-headers -eo exe,tty,%cpu,%mem,state --sort=-%mem | head -5)
+                list=$(ps --no-headers -eo exe,tty,%cpu,%mem,state --sort=-%mem | head -5)
                 printf '{\n'
                 for item in command cpu memory state; do
                         printf '"%s": [\n' "$item"
@@ -29,7 +28,7 @@ case $1 in
                                         printf '\n'
                                 fi
                                 count=$((count+1))
-                        done <<< "$list2"
+                        done <<< "$list"
                         if [ $item != state ]; then
                                 printf '],'
                         else
