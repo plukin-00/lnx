@@ -2,7 +2,7 @@
 
 case $1 in
         top)
-                list=$(ps --no-headers -eo exe,tty,%cpu,%mem,state --sort=-%mem | head -5)
+                list=$(ps --no-headers -eo %cpu,%mem,state,exe --sort=-%mem | head -5)
                 printf '{\n'
                 for item in command cpu memory state; do
                         printf '"%s": [\n' "$item"
@@ -10,16 +10,16 @@ case $1 in
                         while IFS= read -r line; do
                                 case $item in
                                         command)
-                                        printf '"%s"' "$(echo $line | cut -d'?' -f1)"
+                                        printf '"%s"' "$(echo $line |rev| cut -d'/' -f1 | rev)"
                                         ;;
                                         cpu)
-                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f2)"
+                                        printf '"%s"' "$(echo $line | cut -d'/' -f1 | cut -d' ' -f1)"
                                         ;;
                                         memory)
-                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f3)"
+                                        printf '"%s"' "$(echo $line | cut -d'/' -f1 | cut -d' ' -f2)"
                                         ;;
                                         state)
-                                        printf '"%s"' "$(echo $line | cut -d'?' -f2 | cut -d' ' -f4)"
+                                        printf '"%s"' "$(echo $line | cut -d'/' -f1 | cut -d' ' -f3)"
                                         ;;
                                 esac
                                 if [ $count != 4 ]; then
