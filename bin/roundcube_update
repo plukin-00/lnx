@@ -1,0 +1,32 @@
+#!/bin/bash
+
+
+# /usr/bin/mysqldump --lock-tables=false --user=admin --password=`cat /etc/psa/.psa.shadow` --add-drop-table --ignore-table=roundcubemail.session roundcubemail >> /var/www/vhosts/<your subscription>/roundcube-backup.sql
+
+version=$1
+date=$(date +%Y%m%d-%H%M%S)
+
+# backup
+cd /home/plukin/backup
+mkdir roundcube-$date-pre
+cd roundcube-$date-pre
+cp /var/www/virtual/plukin/html/mail/* ./
+
+# download
+# https://github.com/roundcube/roundcubemail/releases/download/1.6.7/roundcubemail-1.6.7-complete.tar.gz
+cd /home/plukin/tmp/mail
+wget https://github.com/roundcube/roundcubemail/releases/download/$version/roundcubemail-$version-complete.tar.gz
+tar -xzf roundcubemail-$version-complete.tar.gz  --strip-components=1
+rm roundcubemail-$version-complete.tar.gz
+
+# install
+bin/installto.sh -y /var/www/virtual/plukin/html/mail
+#mv * /var/www/virtual/plukin/html/mail/
+#mv .htaccess /var/www/virtual/plukin/html/mail/
+
+# restore data
+#cp -r /home/plukin/backup/snappymail-$date-pre/data/_data_ /var/www/virtual/plukin/html/mail/data
+
+# cleanup
+cd /home/plukin/tmp/mail/
+rm -r *
