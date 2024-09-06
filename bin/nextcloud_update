@@ -1,12 +1,29 @@
 #!/bin/bash
 
+## old
+#cd /var/www/virtual/plukin/html/cloud/
+#php occ maintenance:mode --on
+#sleep 2
+#cd /var/www/virtual/plukin/html/cloud/updater/
+#php updater.phar -nq
+#sleep 2
+#cd /var/www/virtual/plukin/html/cloud/
+#php occ maintenance:mode --off
+#sleep 2
+#php occ db:add-missing-indices
+
+
+## new
 cd /var/www/virtual/plukin/html/cloud/
-php occ maintenance:mode --on
-sleep 2
-cd /var/www/virtual/plukin/html/cloud/updater/
-php updater.phar -nq
-sleep 2
-cd /var/www/virtual/plukin/html/cloud/
-php occ maintenance:mode --off
-sleep 2
-php occ db:add-missing-indices
+php updater/updater.phar -vv --no-backup --no-interaction
+php occ db:add-missing-primary-keys --no-interaction
+php occ db:add-missing-columns --no-interaction
+php occ db:add-missing-indices --no-interaction
+php occ db:convert-filecache-bigint --no-interaction
+
+php occ app:update --all
+php occ upgrade
+/usr/sbin/restorecon -R ~/html
+if test -f ~/etc/services.d/notify_push.ini
+then supervisorctl restart notify_push
+fi
