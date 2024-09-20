@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/satisfactory/server/Engine/Binaries/Linux/
+cat FactoryServer-Linux-Shipping.version
