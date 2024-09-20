@@ -1,0 +1,6 @@
+#!/bin/bash
+
+systemctl stop satisfactory.service
+/usr/games/steamcmd +force_install_dir "/home/satisfactory/server" +login anonymous +app_update 1690800 validate +quit
+chown -R satisfactory:satisfactory /home/satisfactory/server
+systemctl start satisfactory.service
