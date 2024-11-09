@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/paperless
+runuser -l paperless -c 'docker compose pull & docker compose up -d'
