@@ -41,7 +41,7 @@ case $1 in
 		pvesm prune-backups local-backup
 	;;
 	hetznerpve)
-	## archive backups from remote machine "hetzner pve"		
+	## archive backups from remote machine "hetzner pve"
 		backup_dir="root@plumeyer.net:/var/lib/vz/dump/"
 		archiv_dir="/mnt/pve/tank-pool/dump/"
 		rsync -a $backup_dir $archiv_dir
