@@ -40,4 +40,10 @@ case $1 in
                 # wochentliches prune auf local, retention: 6 daily
 		pvesm prune-backups local-backup
 	;;
+	hetznerpve)
+	## archive backups from remote machine "hetzner pve"		
+		backup_dir="root@plumeyer.net:/var/lib/vz/dump/"
+		archiv_dir="/mnt/pve/tank-pool/dump/"
+		rsync -a $backup_dir $archiv_dir
+	;;
 esac
