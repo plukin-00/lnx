@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# dir
+du -hs / | sort -rh | head -10
+
+
+# inkl. subdir
+du -hS / | sort -rh | head -10
+
+# files
+find -type f -exec du -Sh {} + | sort -rh | head -n 10
