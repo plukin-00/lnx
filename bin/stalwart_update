@@ -1,0 +1,45 @@
+#!/bin/bash
+
+if [[ -z "$1" ]] && [[ -z "$2" ]]; then
+        echo "no commands specified"
+        exit
+fi
+
+case $1 in
+        cli)
+                # Update Stalwart CLI
+                download_link="https://github.com/stalwartlabs/stalwart/releases/download/v${2}/stalwart-cli-x86_64-unknown-linux-gnu.tar.gz"
+                version=$(/opt/stalwart/bin/stalwart-cli -V
+
+                mkdir /root/backup
+                cp /opt/stalwart/bin/stalwart-cli /root/backup/stalwart-cli_$version
+                rm /opt/stalwart/bin/stalwart-cli
+                sleep 1
+
+                cd /opt/stalwart/bin
+                wget $download_link
+                tar -xzf stalwart-cli-x86_64-unknown-linux-gnu.tar.gz
+                rm stalwart-cli-x86_64-unknown-linux-gnu.tar.gz
+                chmod +x stalwart-cli
+        ;;
+        server)
+                ## Update Stalwart Mail Server
+                download_link="https://github.com/stalwartlabs/stalwart/releases/download/v${1}/stalwart-x86_64-unknown-linux-gnu.tar.gz"
+                version=$(/opt/stalwart/bin/stalwart -V)
+                systemctl stop stalwart
+                sleep 1
+
+                mkdir /root/backup/
+                cp /opt/stalwart/bin/stalwart /root/backup/stalwart_$version
+                rm /opt/stalwart/bin/stalwart
+                sleep 1
+
+                cd /opt/stalwart/bin
+                wget $download_link
+                tar -xzf stalwart-x86_64-unknown-linux-gnu.tar.gz
+                rm stalwart-x86_64-unknown-linux-gnu.tar.gz
+                chmod +x stalwart
+                sleep 1
+                systemctl start stalwart
+        ;;
+esac
