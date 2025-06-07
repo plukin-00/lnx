@@ -24,7 +24,7 @@ case $1 in
         ;;
         server)
                 ## Update Stalwart Mail Server
-                download_link="https://github.com/stalwartlabs/stalwart/releases/download/v${1}/stalwart-x86_64-unknown-linux-gnu.tar.gz"
+                download_link="https://github.com/stalwartlabs/stalwart/releases/download/v${2}/stalwart-x86_64-unknown-linux-gnu.tar.gz"
                 version=$(/opt/stalwart/bin/stalwart -V)
                 systemctl stop stalwart
                 sleep 1
