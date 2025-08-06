@@ -1,40 +1,56 @@
 #!/bin/bash
 
 case $1 in
-	bin)
-		# Update Binary
-		bin_version=$(vaultwarden_version bin)
-		supervisorctl stop vaultwarden &
-		sleep 4
-		cd ~/vaultwarden
-		wget -O docker-image-extract https://raw.githubusercontent.com/jjlin/docker-image-extract/main/docker-image-extract
-		#mv backup backup_old
-		sleep 2
-		mkdir backup_$bin_version
-		cp output/data/ backup_$bin_version/. -r
-		sleep 2
-		cp output/.env backup_$bin_version/.
-		sleep 2
-		./docker-image-extract vaultwarden/server:latest-alpine
-		#sleep 1
-		#cp backup/data/ output/. -r
-		#sleep 1
-		#cp backup/.env output/.
-		supervisorctl start vaultwarden &
-	;;
-	web)
-		## Web Interface
-		download_link="https://github.com/bitwarden/clients/releases/download/web-v${2}/web-${2}-selfhosted-open-source.zip"
-		cd ~/vaultwarden/output
-		rm -Rf web-backup
-		mv web-vault web-backup
-		wget $download_link
-		sleep 2
-		unzip web-$2-selfhosted-open-source.zip
-		sleep 2
-		mv build web-vault
-		rm web-$2-selfhosted-open-source.zip
-		sleep 2
-		supervisorctl restart vaultwarden &
-	;;
+        bin)
+                ## Update Docker Image
+                docker compose pull && docker compose up -d
+                ## Update Binary
+                #bin_version=$(vaultwarden_version bin)
+                #supervisorctl stop vaultwarden &
+                #sleep 4
+                #cd ~/vaultwarden
+                #wget -O docker-image-extract https://raw.githubusercontent.com/jjlin/docker-image-extract/main/doc>
+                ##mv backup backup_old
+                #sleep 2
+                #mkdir backup_$bin_version
+                #cp output/data/ backup_$bin_version/. -r
+                #sleep 2
+                #cp output/.env backup_$bin_version/.
+                #sleep 2
+                #./docker-image-extract vaultwarden/server:latest-alpine
+                ##sleep 1
+                ##cp backup/data/ output/. -r
+                ##sleep 1
+                ##cp backup/.env output/.
+                #supervisorctl start vaultwarden &
+        ;;
+        web)
+                ## Web Interface
+                download_link="https://github.com/bitwarden/clients/releases/download/web-v${2}/web-${2}-selfhosted>
+                cd /root
+                rm -Rf web-backup
+                mv web-vault web-backup
+                wget $download_link
+                sleep 1
+                unzip web-$2-selfhosted-open-source.zip
+                sleep 1
+                mv build web-vault
+                docker compose down
+                rm web-$2-selfhosted-open-source.zip
+                sleep 1
+                docker compose up -d
+
+                ## Old
+                #cd ~/vaultwarden/output
+                #rm -Rf web-backup
+                #mv web-vault web-backup
+                #wget $download_link
+                #sleep 2
+                #unzip web-$2-selfhosted-open-source.zip
+                #sleep 2
+                #mv build web-vault
+                #rm web-$2-selfhosted-open-source.zip
+                #sleep 2
+                #supervisorctl restart vaultwarden &
+        ;;
 esac
