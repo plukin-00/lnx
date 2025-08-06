@@ -2,13 +2,15 @@
 
 case $1 in
 	bin)
-		# Binary
-		cd ~/vaultwarden/output
-		./vaultwarden --version | cut -d" " -f2
+		## Binary
+                #old: cd ~/vaultwarden/output
+                #old: ./vaultwarden --version | cut -d" " -f2
+                docker exec vaultwarden /vaultwarden --version  | grep Vaultwarden  | cut -d" " -f2
 	;;
 	web)
 		## Web Interface
-		cd ~/vaultwarden/output/web-vault
-		cat version.json | cut -d"\"" -f4
+                #old: cd ~/vaultwarden/output/web-vault
+                #old: cat version.json | cut -d"\"" -f4
+                docker exec vaultwarden /vaultwarden --version  | grep Web-Vault  | cut -d" " -f2
 	;;
 esac
