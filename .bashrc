@@ -1,5 +1,23 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
+# Automates Docker Compose update: stop, pull, up -d, with optional logs.
+function update_docker() {
+  echo "Stopping Docker Compose services..."
+  docker compose stop
+
+  echo "Pulling latest images..."
+  docker compose pull
+
+  echo "Starting Docker Compose services in detached mode..."
+  docker compose up -d
+
+  # If 'logs' is the first argument, follow logs afterward
+  if [ "$1" == "logs" ]; then
+    echo "--- Following logs (Press Ctrl+C to exit) ---"
+    docker compose logs -f
+  fi
+}
+
 ## Options
 # colored prompt
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
