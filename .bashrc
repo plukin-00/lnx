@@ -34,7 +34,7 @@ export LS_OPTIONS='--color=auto'
 eval "$(dircolors)"
 alias ls='ls $LS_OPTIONS'
 alias ll='ls $LS_OPTIONS -l'
-alias l='ls $LS_OPTIONS -lA'
+alias la='ls $LS_OPTIONS -lA'
 
 ## avoid making mistakes
 # alias rm='rm -i'
@@ -50,3 +50,7 @@ alias add='apt install'
 alias update='apt update'
 alias remove='apt remove'
 alias clean='apt autoremove && sudo apt clean'
+
+alias bigfiles='du -aBm * 2>/dev/null | sort -nr | head -n 10'
+
+alias omp='eval "$(oh-my-posh init bash --config 'hunk')"'
