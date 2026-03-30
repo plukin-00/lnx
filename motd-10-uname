@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Update
 let upSeconds="$(/usr/bin/cut -d. -f1 /proc/uptime)"
