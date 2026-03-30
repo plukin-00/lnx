@@ -49,7 +49,7 @@ alias ....='cd ../../..;pwd'
 alias add='apt install'
 alias update='apt update'
 alias remove='apt remove'
-alias clean='apt autoremove && sudo apt clean'
+alias clean='apt autoremove && apt autoclean && apt clean'
 
 alias bigfiles='du -aBm * 2>/dev/null | sort -nr | head -n 10'
 
