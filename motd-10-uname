@@ -1,5 +1,26 @@
 #!/bin/sh
-echo -e "System: \t $( uname -snrvm )"
-echo -e "Updates: \t $( /root/bin/sensor updates )"
-echo -e "Uptime: \t $( uptime )"
-echo -e "Datum: \t $( date )"
+
+## Update
+let upSeconds="$(/usr/bin/cut -d. -f1 /proc/uptime)"
+let mins=$((${upSeconds}/60%60))
+let hours=$((${upSeconds}/3600%24))
+let days=$((${upSeconds}/86400))
+if [[ ${days} == 0 ]]; then
+    UPTIME=`printf "%02d hours %02d minutes" "$hours" "$mins"`
+else
+    UPTIME=`printf "%d days %02d hours %02d minutes" "$days" "$hours" "$mins"`
+fi
+
+## Wetter
+city='Tübingen' # Change this to your location for Weather Info or keep it empty for automatic location retrieval
+weather=$(curl -s "wttr.in/${city}?format=1")
+
+## MOTD
+figlet "$(hostname)"
+echo -e "System: \t $( lsb_release -ds )"
+echo -e "CPU: \t\t $( lscpu | grep 'Model name' | cut -f 2 -d ":" | awk '{$1=$1}1' )"
+echo -e "Kernel: \t $( uname -smr )"
+echo -e "Updates: \t $( apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | cut -d" " -f1 )"
+echo -e "Uptime: \t ${UPTIME}"
+echo -e "Datum: \t\t $( date )"
+echo -e "Wetter: \t ${weather} (${city})"
