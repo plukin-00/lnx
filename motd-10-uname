@@ -1,1 +1,5 @@
-
+#!/bin/sh
+echo -e "System: \t $( uname -snrvm )"
+echo -e "Updates: \t $( /root/bin/sensor updates )"
+echo -e "Uptime: \t $( uptime )"
+echo -e "Datum: \t $( date )"
