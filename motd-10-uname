@@ -25,3 +25,4 @@ echo -e "Updates: \t $( apt-get upgrade -s | /usr/bin/grep -P '^\d+ upgraded' | 
 echo -e "Uptime: \t ${UPTIME}"
 echo -e "Datum: \t\t $( date )"
 echo -e "Wetter: \t ${weather} (${city})"
+echo ""
