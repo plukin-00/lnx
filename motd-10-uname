@@ -16,7 +16,7 @@ city='Tübingen' # Change this to your location for Weather Info or keep it empt
 weather=$(curl -s "wttr.in/${city}?format=1")
 
 ## MOTD
-figlet "$(hostname)"
+figlet -f small "$(hostname)"
 echo -e "System: \t $( lsb_release -ds )"
 echo -e "CPU: \t\t $( lscpu | grep 'Model name' | cut -f 2 -d ":" | awk '{$1=$1}1' )"
 echo -e "Kernel: \t $( uname -smr )"
