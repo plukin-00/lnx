@@ -4,3 +4,5 @@ iotop -o -b -d 10
 
 # zeigt schreibzugriffe auf zfs
 watch -d -n 5 zfs list -o name,written
+
+watch -n 0.1 zpool iostat -r -p
